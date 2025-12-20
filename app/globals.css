@@ -1,0 +1,277 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --body-font: "Inter", sans-serif;
+  --transition: all 0.5s ease-in-out;
+  --transition2: all 0.3s ease-in-out;
+  --animate-duration: 1s;
+  --animate-delay: 0.5s;
+  --p1: 0, 89, 232;
+  --p2: 188, 113, 65;
+  --p3: 255, 153, 88;
+  --p4: 10, 46, 107;
+  --p5: 252, 253, 255;
+  --p6: 255, 255, 255;
+  --p7: 245, 249, 255;
+  --p8: 10, 46, 107;
+  --p9: 0, 0, 0;
+  --p10: 245, 249, 255;
+  --p11: 206, 227, 255;
+  --p12: 10, 46, 107;
+  --s1: 235, 235, 236;
+  --s2: 121, 143, 29;
+  --h1: 245, 249, 255;
+  --h2: 220, 235, 255;
+  --f1: 10, 46, 107;
+  --b1: 252, 253, 255;
+  --b2: 178, 211, 255;
+  --box-shadow-p1: 0px 0px 24px 0px rgba(0, 0, 0, 0.08);
+}
+:root .dark {
+  --p1: 0, 89, 232;
+  --p2: 255, 153, 88;
+  --p3: 255, 153, 88;
+  --p4: 206, 227, 255;
+  --p5: 9, 17, 31;
+  --p6: 255, 255, 255;
+  --p7: 11, 36, 81;
+  --p8: 255, 255, 255;
+  --p9: 0, 0, 0;
+  --p10: 245, 249, 255;
+  --p11: 206, 227, 255;
+  --p12: 10, 46, 107;
+  --h1: 11, 36, 81;
+  --h2: 14, 56, 129;
+  --f1: 10, 46, 107;
+  --b1: 14, 44, 99;
+  --b2: 115, 167, 255, 0.5;
+  --b3: rgb(115, 167, 255, 0.5);
+}
+
+body {
+  font-family: var(--body-font);
+  color: #dfdfe0;
+  font-size: 16px;
+  line-height: 130%;
+  padding: 0;
+  margin: 0;
+  font-weight: 400;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.display-one {
+  font-size: 80px;
+  line-height: 120%;
+}
+
+.display-two {
+  font-size: 72px;
+  line-height: 120%;
+}
+
+.display-three {
+  font-size: 64px;
+  line-height: 120%;
+}
+
+.display-four {
+  font-size: 56px;
+  line-height: 120%;
+}
+
+.display-five {
+  font-size: 56px;
+  line-height: 120%;
+}
+
+.display-nine {
+  font-size: 200px;
+  line-height: 100%;
+}
+
+.fs-one,
+h1,
+h1 > a {
+  font-size: 48px;
+  line-height: 120%;
+}
+
+.fs-two,
+h2,
+h2 > a {
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.fs-three,
+h3,
+h3 > a {
+  font-size: 32px;
+  line-height: 120%;
+}
+
+.fs-four,
+h4,
+h4 > a {
+  font-size: 28px;
+  line-height: 120%;
+}
+
+.fs-five,
+h5,
+h5 > a {
+  font-size: 24px;
+  line-height: 120%;
+}
+
+.fs-six,
+h6,
+h6 > a {
+  font-size: 20px;
+  line-height: 120%;
+}
+
+.fs-seven {
+  font-size: 14px;
+  line-height: 130%;
+}
+
+.fs-eight {
+  font-size: 12px;
+  line-height: 130%;
+}
+
+.fs-nine {
+  font-size: 10px;
+  line-height: 130%;
+}
+
+.fs-ten {
+  font-size: 18px;
+  line-height: 130%;
+}
+
+.fs-eleven {
+  font-size: 16px;
+  line-height: 120%;
+}
+
+table thead tr th {
+  font-size: 16px;
+  line-height: 130%;
+}
+
+a,
+p,
+button,
+span,
+label,
+li {
+  font-size: 16px;
+  line-height: 150%;
+}
+
+@media (max-width: 1399px) {
+  .display-nine {
+    font-size: 150px;
+    line-height: 100%;
+  }
+}
+
+@media (max-width: 1199px) {
+  .display-nine {
+    font-size: 120px;
+    line-height: 100%;
+  }
+  h1,
+  h1 > a {
+    font-size: 40px;
+    line-height: 120%;
+  }
+  h2,
+  h2 > a {
+    font-size: 32px;
+    line-height: 120%;
+  }
+  .preloader {
+    background-size: 30%;
+  }
+}
+
+.pt-120 {
+  padding-top: 120px;
+}
+
+.pb-120 {
+  padding-bottom: 120px;
+}
+
+.pt-60 {
+  padding-top: 60px;
+}
+
+.pb-60 {
+  padding-bottom: 60px;
+}
+
+.particles_hero {
+  position: absolute !important;
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  left: 0;
+  z-index: 20 !important;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.particial-bg {
+  width: 100%;
+  height: 1080px;
+  background: url("../public/images/hero.jpg");
+  background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    position: relative;
+}
+
+/* Add a dark overlay to make text more readable */
+.particial-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 42, 92, 0.8); /* Using your theme color with opacity */
+  z-index: -1;
+}
+
+.particial-bg > .container {
+  position: relative;
+  z-index: 30;
+}
+
+.service_heading {
+  width: 636px;
+}
+
+.service_card_hover:hover {
+  background-color: rgb(var(--p7));
+  transition: 0.3s;
+}
+
+.service_card_hover {
+  transition: 0.3s;
+}
