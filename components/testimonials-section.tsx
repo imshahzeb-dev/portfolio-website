@@ -6,9 +6,9 @@ import { useEffect, useRef } from "react"
 
 export function TestimonialsSection() {
   return (
-    <section className="testimonial pt-[120px] pb-[120px]">
+    <section className="testimonial pt-[120px] pb-[120px] bg-[#0A2E6B] dark:bg-[#09111F]">
       <div className="process_heading w-full text-center mb-8 lg:mb-15">
-        <span className="text-lg font-semibold text-orange-400 mb-2 block">
+        <span className="text-lg font-semibold text-[#FF9958] mb-2 block">
           Testimonials
         </span>
         <h2 className="text-4xl font-semibold text-white mb-6">
@@ -20,7 +20,7 @@ export function TestimonialsSection() {
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
-              className="px-4 sm:px-8 py-5 sm:py-10 border border-blue-200/20 bg-blue-50/5 rounded-lg hover:shadow-xl transition-all"
+              className="px-4 sm:px-8 py-5 sm:py-10 border border-[#0E3881]/30 bg-[#0E3881]/20 rounded-lg hover:shadow-xl transition-all"
             >
               <div className="flex gap-4 lg:gap-8">
                 <div className="flex-shrink-0">
@@ -41,7 +41,7 @@ export function TestimonialsSection() {
                     {Array.from({ length: testimonial.rating }).map((_, i) => (
                       <i
                         key={i}
-                        className="ph-fill ph-star text-orange-400"
+                        className="ph-fill ph-star text-[#FF9958]"
                       ></i>
                     ))}
                   </div>

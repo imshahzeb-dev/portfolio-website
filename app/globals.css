@@ -8,18 +8,20 @@
   --transition2: all 0.3s ease-in-out;
   --animate-duration: 1s;
   --animate-delay: 0.5s;
-  --p1: 0, 89, 232;
+
+  /* TechnoX Color Variables */
+  --p1: 0, 89, 232;        /* Primary Blue */
   --p2: 188, 113, 65;
   --p3: 255, 153, 88;
-  --p4: 10, 46, 107;
-  --p5: 252, 253, 255;
-  --p6: 255, 255, 255;
-  --p7: 245, 249, 255;
-  --p8: 10, 46, 107;
-  --p9: 0, 0, 0;
-  --p10: 245, 249, 255;
-  --p11: 206, 227, 255;
-  --p12: 10, 46, 107;
+  --p4: 10, 46, 107;       /* Dark Blue */
+  --p5: 252, 253, 255;     /* Light Background */
+  --p6: 255, 255, 255;     /* White */
+  --p7: 245, 249, 255;     /* Very Light Blue */
+  --p8: 10, 46, 107;       /* Dark Blue Text */
+  --p9: 0, 0, 0;           /* Black */
+  --p10: 245, 249, 255;    /* Light Blue Background */
+  --p11: 206, 227, 255;    /* Light Blue */
+  --p12: 10, 46, 107;      /* Dark Blue */
   --s1: 235, 235, 236;
   --s2: 121, 143, 29;
   --h1: 245, 249, 255;
@@ -28,8 +30,56 @@
   --b1: 252, 253, 255;
   --b2: 178, 211, 255;
   --box-shadow-p1: 0px 0px 24px 0px rgba(0, 0, 0, 0.08);
+
+  /* Shadcn UI Variables - Light Mode with TechnoX Colors */
+  --background: 0 0% 100%;              /* White background */
+  --foreground: 216 67% 23%;            /* Dark blue text - #0A2E6B */
+
+  --card: 214 100% 98%;                 /* Light blue card - #F5F9FF */
+  --card-foreground: 216 67% 23%;       /* Dark blue text */
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 216 67% 23%;
+
+  --primary: 211 100% 46%;              /* Primary blue - #0059E8 */
+  --primary-foreground: 0 0% 100%;      /* White text on primary */
+
+  --secondary: 214 100% 98%;            /* Light blue - #F5F9FF */
+  --secondary-foreground: 216 67% 23%;  /* Dark blue text */
+
+  --muted: 214 100% 98%;                /* Light blue muted - #F5F9FF */
+  --muted-foreground: 216 40% 50%;      /* Medium blue */
+
+  --accent: 214 100% 90%;               /* Light accent - #CEE3FF */
+  --accent-foreground: 216 67% 23%;     /* Dark blue text */
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 214 100% 90%;               /* Light blue border - #CEE3FF */
+  --input: 214 100% 90%;                /* Light blue input border */
+  --ring: 211 100% 46%;                 /* Primary blue ring */
+
+  --radius: 0.5rem;
+
+  --chart-1: 211 100% 46%;
+  --chart-2: 214 100% 90%;
+  --chart-3: 216 67% 23%;
+  --chart-4: 27 88% 63%;
+  --chart-5: 73 39% 34%;
+
+  --sidebar-background: 0 0% 100%;
+  --sidebar-foreground: 216 67% 23%;
+  --sidebar-primary: 211 100% 46%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 214 100% 98%;
+  --sidebar-accent-foreground: 216 67% 23%;
+  --sidebar-border: 214 100% 90%;
+  --sidebar-ring: 211 100% 46%;
 }
-:root .dark {
+
+.dark {
+  /* TechnoX Dark Mode Colors */
   --p1: 0, 89, 232;
   --p2: 255, 153, 88;
   --p3: 255, 153, 88;
@@ -48,11 +98,56 @@
   --b1: 14, 44, 99;
   --b2: 115, 167, 255, 0.5;
   --b3: rgb(115, 167, 255, 0.5);
+
+  /* Shadcn UI Variables - Dark Mode with TechnoX Colors */
+  --background: 216 56% 6%;             /* Very dark blue - #09111F */
+  --foreground: 0 0% 100%;              /* White text */
+
+  --card: 216 60% 16%;                  /* Dark blue card - #0B2451 */
+  --card-foreground: 0 0% 100%;
+
+  --popover: 216 60% 16%;
+  --popover-foreground: 0 0% 100%;
+
+  --primary: 211 100% 46%;              /* Primary blue - #0059E8 */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 216 65% 22%;             /* Medium dark blue - #0E2C63 */
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 216 60% 16%;                 /* Dark blue muted */
+  --muted-foreground: 214 100% 90%;     /* Light blue text */
+
+  --accent: 216 65% 28%;                /* Accent dark blue - #0E3881 */
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 216 65% 22%;                /* Dark blue border */
+  --input: 216 65% 22%;
+  --ring: 211 100% 46%;
+
+  --chart-1: 211 100% 46%;
+  --chart-2: 214 100% 90%;
+  --chart-3: 216 67% 23%;
+  --chart-4: 27 88% 63%;
+  --chart-5: 73 39% 34%;
+
+  --sidebar-background: 216 56% 6%;
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-primary: 211 100% 46%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 216 60% 16%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 216 65% 22%;
+  --sidebar-ring: 211 100% 46%;
 }
 
 body {
   font-family: var(--body-font);
-  color: #dfdfe0;
+  color: rgb(var(--p8));
+  background-color: rgb(var(--b1));
   font-size: 16px;
   line-height: 130%;
   padding: 0;
@@ -60,6 +155,17 @@ body {
   font-weight: 400;
   overflow-x: hidden;
   position: relative;
+}
+
+.dark body {
+  color: rgb(var(--p8));
+  background-color: rgb(var(--b1));
+}
+
+/* Performance optimizations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .display-one {

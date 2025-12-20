@@ -24,7 +24,7 @@ export function Footer() {
                 challenges. Join the thriving technox it solution agency.
               </p>
               <div className="my-3 sm:my-5 md:my-10">
-                <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:shadow-lg transition-all">
+                <button className="px-6 py-3 bg-[#0059E8] hover:bg-[#0046BA] text-white rounded-full hover:shadow-lg transition-all">
                   Request demo
                 </button>
               </div>
@@ -35,31 +35,31 @@ export function Footer() {
                 <div className="flex flex-wrap gap-3">
                   <Link
                     href="#"
-                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-blue-500 flex justify-center items-center transition-all"
+                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-[#0059E8] flex justify-center items-center transition-all"
                   >
                     <i className="ph ph-facebook-logo text-xl text-white"></i>
                   </Link>
                   <Link
                     href="#"
-                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-blue-500 flex justify-center items-center transition-all"
+                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-[#0059E8] flex justify-center items-center transition-all"
                   >
                     <i className="ph ph-x-logo text-xl text-white"></i>
                   </Link>
                   <Link
                     href="#"
-                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-blue-500 flex justify-center items-center transition-all"
+                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-[#0059E8] flex justify-center items-center transition-all"
                   >
                     <i className="ph ph-linkedin-logo text-xl text-white"></i>
                   </Link>
                   <Link
                     href="#"
-                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-blue-500 flex justify-center items-center transition-all"
+                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-[#0059E8] flex justify-center items-center transition-all"
                   >
                     <i className="ph ph-instagram-logo text-xl text-white"></i>
                   </Link>
                   <Link
                     href="#"
-                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-blue-500 flex justify-center items-center transition-all"
+                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-[#0059E8] flex justify-center items-center transition-all"
                   >
                     <i className="ph ph-youtube-logo text-xl text-white"></i>
                   </Link>

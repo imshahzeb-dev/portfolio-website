@@ -61,10 +61,21 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        fontFamily: {
-          sans: ["var(--font-inter)"],
-          montserrat: ["var(--font-montserrat)"],
+        // TechnoX Custom Colors
+        'technox': {
+          'primary-blue': '#0059E8',      // --p1
+          'dark-blue': '#0A2E6B',          // --p4, --p8, --p12
+          'light-blue': '#CEE3FF',         // --p11
+          'very-light-blue': '#F5F9FF',    // --p7, --p10
+          'light-bg': '#FCFDFF',           // --p5
+          'white': '#FFFFFF',              // --p6
+          'orange': '#FF9958',             // --p3
+          'light-orange': '#BC7141',       // --p2
         },
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)"],
+        montserrat: ["var(--font-montserrat)"],
       },
       borderRadius: {
         lg: "var(--radius)",

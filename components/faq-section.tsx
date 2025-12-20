@@ -4,9 +4,9 @@ import { faqs } from "@/data/faqs"
 import { useState } from "react"
 
 export function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0)
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
 
-  const toggleFAQ = (index: number) => {
+  const toggleFaq = (index: number) => {
     setOpenIndex(openIndex === index ? null : index)
   }
 
@@ -36,21 +36,25 @@ export function FAQSection() {
               return (
                 <div
                   key={faq.id}
-                  className="p-4 md:p-8 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer"
-                  onClick={() => toggleFAQ(actualIndex)}
+                  className="p-4 md:p-8 border border-gray-200 dark:border-gray-700 rounded-lg"
+                  onMouseLeave={() => setOpenIndex(null)}
                 >
                   <div className="question flex gap-3 justify-between items-center">
                     <div className="flex gap-2 items-center flex-1">
-                      <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-blue-500 rounded">
+                      <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#0059E8] rounded">
                         <i className="ph ph-arrow-right text-white"></i>
                       </div>
-                      <h3 className="text-blue-500 text-lg font-bold">
+                      <h3 className="text-[#0059E8] text-lg font-bold">
                         {faq.question}
                       </h3>
                     </div>
-                    <div className="relative">
+                    <div
+                      className="relative cursor-pointer"
+                      onMouseEnter={() => setOpenIndex(actualIndex)}
+                      onClick={() => toggleFaq(actualIndex)}
+                    >
                       <i
-                        className={`ph ph-minus text-blue-500 text-2xl transition-transform ${
+                        className={`ph ph-minus text-[#0059E8] text-2xl transition-transform ${
                           isOpen ? "rotate-0" : "rotate-90"
                         }`}
                       ></i>
@@ -76,21 +80,25 @@ export function FAQSection() {
               return (
                 <div
                   key={faq.id}
-                  className="p-4 md:p-8 border border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer"
-                  onClick={() => toggleFAQ(actualIndex)}
+                  className="p-4 md:p-8 border border-gray-200 dark:border-gray-700 rounded-lg"
+                  onMouseLeave={() => setOpenIndex(null)}
                 >
                   <div className="question flex gap-3 justify-between items-center">
                     <div className="flex gap-2 items-center flex-1">
-                      <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-blue-500 rounded">
+                      <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#0059E8] rounded">
                         <i className="ph ph-arrow-right text-white"></i>
                       </div>
-                      <h3 className="text-blue-500 text-lg font-bold">
+                      <h3 className="text-[#0059E8] text-lg font-bold">
                         {faq.question}
                       </h3>
                     </div>
-                    <div className="relative">
+                    <div
+                      className="relative cursor-pointer"
+                      onMouseEnter={() => setOpenIndex(actualIndex)}
+                      onClick={() => toggleFaq(actualIndex)}
+                    >
                       <i
-                        className={`ph ph-minus text-blue-500 text-2xl transition-transform ${
+                        className={`ph ph-minus text-[#0059E8] text-2xl transition-transform ${
                           isOpen ? "rotate-0" : "rotate-90"
                         }`}
                       ></i>

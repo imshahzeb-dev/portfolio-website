@@ -68,7 +68,7 @@ export function ContactForm() {
             </h3>
             <div className="space-y-6">
               <div className="flex gap-4">
-                <div className="w-14 h-14 flex-shrink-0 bg-blue-500 rounded-lg flex items-center justify-center">
+                <div className="w-14 h-14 flex-shrink-0 bg-[#0059E8] rounded-lg flex items-center justify-center">
                   <i className="ph ph-map-pin text-white text-2xl"></i>
                 </div>
                 <div>
@@ -83,7 +83,7 @@ export function ContactForm() {
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="w-14 h-14 flex-shrink-0 bg-blue-500 rounded-lg flex items-center justify-center">
+                <div className="w-14 h-14 flex-shrink-0 bg-[#0059E8] rounded-lg flex items-center justify-center">
                   <i className="ph ph-phone text-white text-2xl"></i>
                 </div>
                 <div>
@@ -96,7 +96,7 @@ export function ContactForm() {
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="w-14 h-14 flex-shrink-0 bg-blue-500 rounded-lg flex items-center justify-center">
+                <div className="w-14 h-14 flex-shrink-0 bg-[#0059E8] rounded-lg flex items-center justify-center">
                   <i className="ph ph-envelope text-white text-2xl"></i>
                 </div>
                 <div>
@@ -128,7 +128,7 @@ export function ContactForm() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-[#CEE3FF] dark:border-[#0E3881] rounded-lg focus:ring-2 focus:ring-[#0059E8] focus:border-transparent bg-[#F5F9FF] dark:bg-[#0B2451] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="John Doe"
                 />
               </div>
@@ -146,7 +146,7 @@ export function ContactForm() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-[#CEE3FF] dark:border-[#0E3881] rounded-lg focus:ring-2 focus:ring-[#0059E8] focus:border-transparent bg-[#F5F9FF] dark:bg-[#0B2451] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="john@example.com"
                 />
               </div>
@@ -164,7 +164,7 @@ export function ContactForm() {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 border border-[#CEE3FF] dark:border-[#0E3881] rounded-lg focus:ring-2 focus:ring-[#0059E8] focus:border-transparent bg-[#F5F9FF] dark:bg-[#0B2451] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="How can we help?"
                 />
               </div>
@@ -182,7 +182,7 @@ export function ContactForm() {
                   onChange={handleChange}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
+                  className="w-full px-4 py-3 border border-[#CEE3FF] dark:border-[#0E3881] rounded-lg focus:ring-2 focus:ring-[#0059E8] focus:border-transparent bg-[#F5F9FF] dark:bg-[#0B2451] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none"
                   placeholder="Tell us more about your project..."
                 />
               </div>
@@ -202,7 +202,7 @@ export function ContactForm() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-4 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#0059E8] hover:bg-[#0046BA] text-white font-medium py-4 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>

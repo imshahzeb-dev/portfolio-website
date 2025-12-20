@@ -62,7 +62,7 @@ export function ParticlesComponent() {
           },
           move: {
             enable: true,
-            speed: 6,
+            speed: 2,
             direction: "none",
             outModes: {
               default: "out",

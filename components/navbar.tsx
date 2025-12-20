@@ -3,24 +3,92 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export function Navbar() {
     const pathname = usePathname()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [isScrolled, setIsScrolled] = useState(false)
+    const [activeSection, setActiveSection] = useState("home")
+
+    useEffect(() => {
+        // Check if we're on a different page (not home page)
+        if (pathname !== '/') {
+            // Extract page name from pathname (e.g., /portfolio -> portfolio)
+            const pageName = pathname.replace('/', '')
+            setActiveSection(pageName)
+            return // Don't set up scroll listener for other pages
+        }
+
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
+                setIsScrolled(true)
+            } else {
+                setIsScrolled(false)
+            }
+
+            // Scroll spy: determine which section is currently visible (only on home page)
+            const sections = ["home", "services", "portfolio", "pricing", "team", "testimonials", "blog", "faqs", "contact"]
+            const scrollPosition = window.scrollY + 150 // Offset for better detection
+
+            for (const sectionId of sections) {
+                const element = document.getElementById(sectionId)
+                if (element) {
+                    const { top, bottom } = element.getBoundingClientRect()
+                    const elementTop = top + window.scrollY
+                    const elementBottom = bottom + window.scrollY
+
+                    if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
+                        setActiveSection(sectionId)
+                        break
+                    }
+                }
+            }
+        }
+
+        handleScroll() // Call once on mount
+        window.addEventListener("scroll", handleScroll)
+        return () => window.removeEventListener("scroll", handleScroll)
+    }, [pathname])
+
+    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+        e.preventDefault()
+
+        // If we're not on the home page, navigate to home page first
+        if (pathname !== '/') {
+            window.location.href = '/' + targetId
+            return
+        }
+
+        // If we're on home page, scroll to the section
+        const element = document.querySelector(targetId)
+        if (element) {
+            const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - 80
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'auto' // Changed from 'smooth' to 'auto' for instant scroll
+            })
+        }
+        setIsMenuOpen(false)
+    }
 
     const menuItems = [
-        { name: "About", href: "/about" },
-        { name: "Portfolio", href: "/portfolio" },
-        { name: "Pricing", href: "/pricing" },
-        { name: "FAQs", href: "/faqs" },
-        { name: "Contact", href: "/contact" },
-        { name: "Terms & Conditions", href: "/terms" },
-        { name: "Privacy Policy", href: "/privacy" },
+        { name: "Portfolio", href: "#portfolio", id: "portfolio" },
+        { name: "Pricing", href: "#pricing", id: "pricing" },
+        { name: "FAQs", href: "#faqs", id: "faqs" },
+        { name: "Contact", href: "#contact", id: "contact" },
     ]
 
+    // Check if any menu item is currently active
+    const isMenuItemActive = menuItems.some(item => activeSection === item.id)
+
     return (
-        <header className="container overflow-x-hidden mx-auto px-4 py-6 flex justify-between items-center relative z-50">
+        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+            isScrolled
+                ? "bg-[#0A2E6B] shadow-lg"
+                : "bg-transparent"
+        }`}>
+            <div className="container mx-auto px-4 py-6 flex justify-between items-center">
             <div className="flex items-center">
                 <Link href="/">
                     <Image
@@ -33,70 +101,99 @@ export function Navbar() {
                 </Link>
             </div>
             <nav className="hidden lg:flex items-center space-x-8">
-                <Link
-                    href="/"
-                    className={`text-white hover:text-orange-400 transition-all duration-300 ${pathname === "/" ? "border-b-2 border-orange-400 pb-1" : ""
-                        }`}
+                <a
+                    href="#home"
+                    onClick={(e) => scrollToSection(e, '#home')}
+                    className={`transition-all duration-300 cursor-pointer ${
+                        activeSection === 'home'
+                            ? 'text-orange-400 font-semibold'
+                            : 'text-white hover:text-orange-400'
+                    }`}
                 >
                     Home
-                </Link>
-                <Link
-                    href="/services"
-                    className={`text-white hover:text-orange-400 transition-all duration-300 ${pathname === "/services" ? "border-b-2 border-orange-400 pb-1" : ""
-                        }`}
+                </a>
+                <a
+                    href="#services"
+                    onClick={(e) => scrollToSection(e, '#services')}
+                    className={`transition-all duration-300 cursor-pointer ${
+                        activeSection === 'services'
+                            ? 'text-orange-400 font-semibold'
+                            : 'text-white hover:text-orange-400'
+                    }`}
                 >
                     Services
-                </Link>
-                <Link
-                    href="/testimonials"
-                    className={`text-white hover:text-orange-400 transition-all duration-300 ${pathname === "/testimonials" ? "border-b-2 border-orange-400 pb-1" : ""
-                        }`}
+                </a>
+                <a
+                    href="#testimonials"
+                    onClick={(e) => scrollToSection(e, '#testimonials')}
+                    className={`transition-all duration-300 cursor-pointer ${
+                        activeSection === 'testimonials'
+                            ? 'text-orange-400 font-semibold'
+                            : 'text-white hover:text-orange-400'
+                    }`}
                 >
                     Testimonials
-                </Link>
-                <Link
-                    href="/team"
-                    className={`text-white hover:text-orange-400 transition-all duration-300 ${pathname === "/team" ? "border-b-2 border-orange-400 pb-1" : ""
-                        }`}
+                </a>
+                <a
+                    href="#team"
+                    onClick={(e) => scrollToSection(e, '#team')}
+                    className={`transition-all duration-300 cursor-pointer ${
+                        activeSection === 'team'
+                            ? 'text-orange-400 font-semibold'
+                            : 'text-white hover:text-orange-400'
+                    }`}
                 >
                     Team
-                </Link>
+                </a>
                 <div className="relative group">
-                    <button className="text-white hover:text-orange-400 transition-all duration-300 flex items-center gap-1">
+                    <button className={`hover:text-orange-400 group-hover:text-orange-400 transition-all duration-300 flex items-center gap-1 ${
+                        isMenuItemActive
+                            ? 'text-orange-400 font-semibold'
+                            : 'text-white'
+                    }`}>
                         Menu
                         <i className="ph-bold ph-caret-down"></i>
                     </button>
                     <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                         <div className="py-2">
                             {menuItems.map((item) => (
-                                <Link
+                                <a
                                     key={item.href}
                                     href={item.href}
-                                    className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
+                                    onClick={(e) => scrollToSection(e, item.href)}
+                                    className={`block px-4 py-2 transition-colors cursor-pointer ${
+                                        activeSection === item.id
+                                            ? 'bg-orange-50 dark:bg-gray-700 text-orange-500 dark:text-orange-400 font-semibold'
+                                            : 'text-gray-700 dark:text-gray-200 hover:bg-orange-50 dark:hover:bg-gray-700 hover:text-orange-500 dark:hover:text-orange-400'
+                                    }`}
                                 >
                                     {item.name}
-                                </Link>
+                                </a>
                             ))}
                         </div>
                     </div>
                 </div>
-                <Link
-                    href="/blog"
-                    className={`text-white hover:text-orange-400 transition-all duration-300 ${pathname === "/blog" ? "border-b-2 border-orange-400 pb-1" : ""
-                        }`}
+                <a
+                    href="#blog"
+                    onClick={(e) => scrollToSection(e, '#blog')}
+                    className={`transition-all duration-300 cursor-pointer ${
+                        activeSection === 'blog'
+                            ? 'text-orange-400 font-semibold'
+                            : 'text-white hover:text-orange-400'
+                    }`}
                 >
                     Blog
-                </Link>
+                </a>
             </nav>
             <div className="flex items-center gap-4">
                 <Link href="/contact" className="hidden xl:block">
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full font-medium transition-all duration-300">
+                    <button className="bg-[#0059E8] hover:bg-[#0046BA] text-white px-6 py-3 rounded-full font-medium transition-all duration-300">
                         Get Quotes
                     </button>
                 </Link>
                 <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center lg:hidden"
+                    className="w-10 h-10 rounded-full bg-[#0059E8] flex items-center justify-center lg:hidden"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -119,36 +216,81 @@ export function Navbar() {
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-                <div className="absolute top-full left-0 right-0 bg-blue-900 shadow-lg lg:hidden mt-2 rounded-lg mx-4">
+                <div className="absolute top-full left-0 right-0 bg-[#0A2E6B] shadow-lg lg:hidden mt-2 rounded-lg mx-4">
                     <nav className="flex flex-col p-4 space-y-2">
-                        <Link href="/" className="text-white hover:text-orange-400 py-2" onClick={() => setIsMenuOpen(false)}>
+                        <a
+                            href="#home"
+                            className={`py-2 cursor-pointer ${
+                                activeSection === 'home'
+                                    ? 'text-orange-400 font-semibold'
+                                    : 'text-white hover:text-orange-400'
+                            }`}
+                            onClick={(e) => scrollToSection(e, '#home')}
+                        >
                             Home
-                        </Link>
-                        <Link href="/services" className="text-white hover:text-orange-400 py-2" onClick={() => setIsMenuOpen(false)}>
+                        </a>
+                        <a
+                            href="#services"
+                            className={`py-2 cursor-pointer ${
+                                activeSection === 'services'
+                                    ? 'text-orange-400 font-semibold'
+                                    : 'text-white hover:text-orange-400'
+                            }`}
+                            onClick={(e) => scrollToSection(e, '#services')}
+                        >
                             Services
-                        </Link>
-                        <Link href="/testimonials" className="text-white hover:text-orange-400 py-2" onClick={() => setIsMenuOpen(false)}>
+                        </a>
+                        <a
+                            href="#testimonials"
+                            className={`py-2 cursor-pointer ${
+                                activeSection === 'testimonials'
+                                    ? 'text-orange-400 font-semibold'
+                                    : 'text-white hover:text-orange-400'
+                            }`}
+                            onClick={(e) => scrollToSection(e, '#testimonials')}
+                        >
                             Testimonials
-                        </Link>
-                        <Link href="/team" className="text-white hover:text-orange-400 py-2" onClick={() => setIsMenuOpen(false)}>
+                        </a>
+                        <a
+                            href="#team"
+                            className={`py-2 cursor-pointer ${
+                                activeSection === 'team'
+                                    ? 'text-orange-400 font-semibold'
+                                    : 'text-white hover:text-orange-400'
+                            }`}
+                            onClick={(e) => scrollToSection(e, '#team')}
+                        >
                             Team
-                        </Link>
-                        <Link href="/blog" className="text-white hover:text-orange-400 py-2" onClick={() => setIsMenuOpen(false)}>
+                        </a>
+                        <a
+                            href="#blog"
+                            className={`py-2 cursor-pointer ${
+                                activeSection === 'blog'
+                                    ? 'text-orange-400 font-semibold'
+                                    : 'text-white hover:text-orange-400'
+                            }`}
+                            onClick={(e) => scrollToSection(e, '#blog')}
+                        >
                             Blog
-                        </Link>
+                        </a>
                         {menuItems.map((item) => (
-                            <Link
+                            <a
                                 key={item.href}
                                 href={item.href}
-                                className="text-white hover:text-orange-400 py-2"
-                                onClick={() => setIsMenuOpen(false)}
+                                className={`py-2 cursor-pointer ${
+                                    activeSection === item.id
+                                        ? 'text-orange-400 font-semibold'
+                                        : 'text-white hover:text-orange-400'
+                                }`}
+                                onClick={(e) => scrollToSection(e, item.href)}
                             >
                                 {item.name}
-                            </Link>
+                            </a>
                         ))}
                     </nav>
                 </div>
             )}
+            </div>
         </header>
     )
 } 
