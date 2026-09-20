@@ -314,6 +314,27 @@ li {
   }
 }
 
+/* The display sizes are fixed at their desktop values, so the hero headline
+   overflowed small screens — it took four lines on a 390px phone. Step them
+   down the way h1/h2 above already do. */
+@media (max-width: 1199px) {
+  .display-three,
+  .display-four,
+  .display-five {
+    font-size: 46px;
+    line-height: 118%;
+  }
+}
+
+@media (max-width: 767px) {
+  .display-three,
+  .display-four,
+  .display-five {
+    font-size: 34px;
+    line-height: 120%;
+  }
+}
+
 .pt-120 {
   padding-top: 120px;
 }
