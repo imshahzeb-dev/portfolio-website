@@ -280,6 +280,13 @@ li {
   line-height: 150%;
 }
 
+/* The rule above sets every bare <span> to 16px, which silently shrinks spans
+   used for emphasis inside headings. Opt back into the parent's type with this. */
+.inherit-type {
+  font-size: inherit;
+  line-height: inherit;
+}
+
 @media (max-width: 1399px) {
   .display-nine {
     font-size: 150px;
@@ -342,32 +349,14 @@ li {
   }
 }
 
-.particial-bg {
-  width: 100%;
-  height: 1080px;
-  background: url("../public/images/hero.jpg");
-  background-position: center;
-    background-attachment: fixed;
-    background-size: cover;
-    position: relative;
-}
-
-/* Add a dark overlay to make text more readable */
-.particial-bg::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(10, 42, 92, 0.8); /* Using your theme color with opacity */
-  z-index: -1;
-}
-
-.particial-bg > .container {
-  position: relative;
-  z-index: 30;
-}
+/* The hero photo used to live here as a `background-attachment: fixed` layer.
+   Measured on a real GPU that cost 32 fps and 57 dropped frames out of 180
+   while scrolling, with a 1330 ms worst frame: fixed attachment forces a
+   full-viewport repaint every scroll frame and drags the particle canvas
+   composited above it along with it. It also never worked on iOS, and its
+   `::before` overlay sat at `z-index:-1` on a non-stacking parent so it never
+   painted at all. The photo is now a normal layer in the hero component,
+   parallaxed with a GPU-composited transform instead. */
 
 .service_heading {
   width: 636px;
@@ -380,4 +369,204 @@ li {
 
 .service_card_hover {
   transition: 0.3s;
+}
+/* ──────────────────────────────────────────────────────────────────────────
+   Inline-SVG illustration keyframes.
+   Ported from the reference repo — shared by the isometric scenes in
+   components/illustrations/. Every one is disabled under reduced motion at
+   the bottom of this block.
+   ────────────────────────────────────────────────────────────────────────── */
+
+@keyframes svc-node-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.55);
+    opacity: 1;
+  }
+}
+
+@keyframes svc-data-travel {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes svc-bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes svc-dash-draw {
+  from {
+    stroke-dashoffset: 400;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* One-shot stroke draw that stays drawn. Set --len to the path length and
+   strokeDasharray to the same value, so the dash exactly covers the path. */
+@keyframes svc-draw {
+  from {
+    stroke-dashoffset: var(--len, 300);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes svc-chart-draw {
+  from {
+    stroke-dashoffset: 260;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes svc-float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes svc-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes svc-ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes svc-ring-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes svc-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes svc-inf-travel {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+@keyframes svc-eq-bounce {
+  0%,
+  100% {
+    transform: translateY(4px) scaleY(0.72);
+  }
+  50% {
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+/* Horizontal marquee for the tech-stack ribbons. */
+@keyframes svc-marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes svc-marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *[style*="svc-node-pulse"],
+  *[style*="svc-data-travel"],
+  *[style*="svc-bar-grow"],
+  *[style*="svc-dash-draw"],
+  *[style*="svc-chart-draw"],
+  *[style*="svc-draw"],
+  *[style*="svc-float-y"],
+  *[style*="svc-glow-breathe"],
+  *[style*="svc-ring-spin"],
+  *[style*="svc-ring-spin-rev"],
+  *[style*="svc-blink"],
+  *[style*="svc-inf-travel"],
+  *[style*="svc-eq-bounce"],
+  .svc-marquee {
+    animation: none !important;
+  }
+}
+
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Offscreen work skipping.
+
+   The home page carries ~2,500 nodes and ~70 always-running animations across
+   nine stacked sections. `content-visibility: auto` lets the browser skip
+   layout, style and paint for the sections that are not near the viewport,
+   which is most of them at any moment. `contain-intrinsic-size` supplies a
+   placeholder height so the scrollbar stays stable while they are skipped.
+   ────────────────────────────────────────────────────────────────────────── */
+.cv-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Nothing on this site depends on motion to convey meaning. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,9 +1,12 @@
+import type { Metadata } from "next"
 import type React from "react"
 import "@/app/globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
 import { Inter, Montserrat } from "next/font/google"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Navbar } from "@/components/navbar"
+import { Footer } from "@/components/footer"
+import { COMPANY } from "@/data/company"
 
-// Load Inter font
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -11,7 +14,6 @@ const inter = Inter({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 })
 
-// Load Montserrat font
 const montserrat = Montserrat({
   subsets: ["latin"],
   display: "swap",
@@ -19,10 +21,26 @@ const montserrat = Montserrat({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 })
 
-export const metadata = {
-  title: "TechnoX IT - Superior IT Solutions",
-  description: "Delivering superior IT services and solutions for your business",
-    generator: 'v0.dev'
+export const metadata: Metadata = {
+  title: {
+    default: `${COMPANY.name} — Full-Service Technology Partner`,
+    template: `%s — ${COMPANY.name}`,
+  },
+  description: COMPANY.oneLiner,
+  keywords: [
+    "software development company",
+    "AI software development company",
+    "full-service software partner",
+    "custom software development",
+    "generative AI development company",
+    "software development company Islamabad",
+    "AI development company Pakistan",
+  ],
+  openGraph: {
+    title: `${COMPANY.name} — Full-Service Technology Partner`,
+    description: COMPANY.oneLiner,
+    type: "website",
+  },
 }
 
 export default function RootLayout({
@@ -31,13 +49,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
-      <head>
-        <script src="https://unpkg.com/@phosphor-icons/web"></script>
-      </head>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${montserrat.variable}`}
+    >
       <body suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          {children}
+          {/* Navbar and Footer live here so every route — including dynamic
+              detail pages and the 404 — gets both without repeating them. */}
+          <Navbar />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

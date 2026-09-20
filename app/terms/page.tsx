@@ -1,97 +1,99 @@
-import { Navbar } from "@/components/navbar"
+import type { Metadata } from "next"
 import { BannerSection } from "@/components/banner-section"
-import { Footer } from "@/components/footer"
+import { LegalPage } from "@/components/legal-page"
+import { COMPANY, CONTACT } from "@/data/company"
 
+export const metadata: Metadata = {
+  title: "Terms & Conditions",
+  description:
+    "The terms governing use of the TechnoSX website, and how they relate to the contracts that govern client engagements.",
+}
+
+// TODO(founder): have this reviewed by counsel before launch.
 export default function TermsPage() {
   return (
-    <div className="min-h-screen">
-      <Navbar />
+    <>
       <BannerSection
+        eyebrow="Legal"
         title="Terms & Conditions"
-        description="Please read these terms and conditions carefully before using our services."
-        breadcrumbItems={[{ label: "Terms Conditions" }]}
+        description="The terms that govern use of this website. Client work is governed by its own signed agreement."
+        breadcrumbItems={[{ label: "Terms & Conditions" }]}
       />
-
-      <section className="pt-[120px] pb-[120px]">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
-              1. Introduction
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Welcome to TechnoxIt. These terms and conditions outline the rules
-              and regulations for the use of our website and services.
-            </p>
-
-            <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
-              2. Intellectual Property Rights
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Unless otherwise stated, TechnoxIt and/or its licensors own the
-              intellectual property rights for all material on this website. All
-              intellectual property rights are reserved.
-            </p>
-
-            <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
-              3. Restrictions
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              You are specifically restricted from all of the following:
-            </p>
-            <ul className="list-disc pl-6 text-gray-600 dark:text-gray-300 mb-6 space-y-2">
-              <li>Publishing any website material in any other media</li>
-              <li>
-                Selling, sublicensing and/or otherwise commercializing any
-                website material
-              </li>
-              <li>Publicly performing and/or showing any website material</li>
-              <li>
-                Using this website in any way that is or may be damaging to this
-                website
-              </li>
-              <li>
-                Using this website in any way that impacts user access to this
-                website
-              </li>
-            </ul>
-
-            <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
-              4. Your Content
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              In these terms and conditions, "Your Content" shall mean any audio,
-              video text, images or other material you choose to display on this
-              website. By displaying Your Content, you grant TechnoxIt a
-              non-exclusive, worldwide irrevocable, sub licensable license to
-              use, reproduce, adapt, publish, translate and distribute it in any
-              and all media.
-            </p>
-
-            <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
-              5. Limitation of Liability
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">
-              In no event shall TechnoxIt, nor any of its officers, directors and
-              employees, be held liable for anything arising out of or in any way
-              connected with your use of this website whether such liability is
-              under contract. TechnoxIt, including its officers, directors and
-              employees shall not be held liable for any indirect, consequential
-              or special liability arising out of or in any way related to your
-              use of this website.
-            </p>
-
-            <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
-              6. Contact Information
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              If you have any questions about these Terms & Conditions, please
-              contact us at info@technox.com
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
+      <LegalPage
+        lastUpdated="18 September 2026"
+        intro={`These terms govern your use of the ${COMPANY.name} website. They do not govern client engagements — those are covered by a separate signed agreement, which takes precedence over anything on this page.`}
+        sections={[
+          {
+            heading: "Acceptance",
+            body: [
+              "By using this website you accept these terms. If you do not accept them, please do not use the site.",
+            ],
+          },
+          {
+            heading: "Intellectual property",
+            body: [
+              `Unless stated otherwise, ${COMPANY.name} or its licensors own the content, design and code of this website. You may read, share and quote it with attribution. You may not republish it as your own.`,
+              "Intellectual property created during a client engagement is assigned per the engagement contract. Our default position is that the client owns the code, the infrastructure and the accounts.",
+            ],
+          },
+          {
+            heading: "Acceptable use",
+            body: ["You agree not to use this website in any of the following ways."],
+            list: [
+              "To attempt to gain unauthorised access to the site or its infrastructure",
+              "To scrape, mirror or republish the content commercially without permission",
+              "To impersonate TechnoSX or misrepresent an association with us",
+              "In any way that damages the site or impairs another person's use of it",
+            ],
+          },
+          {
+            heading: "Content you send us",
+            body: [
+              "Anything you submit through the contact form or send us by email remains yours. You grant us only the permission needed to read it, respond to it, and — if we work together — act on it. We treat unsolicited confidential information as confidential, but please do not send trade secrets before an NDA is in place.",
+            ],
+          },
+          {
+            heading: "No professional advice",
+            body: [
+              "Content on this site, including articles and service descriptions, is general information about how we work. It is not technical, legal or financial advice for your specific situation. Engagement-specific recommendations are given under contract.",
+            ],
+          },
+          {
+            heading: "Accuracy",
+            body: [
+              "We publish only what we can stand behind. We do not publish invented metrics, client logos or testimonials. Where a number, case study outcome or client detail is not yet confirmed by the client, we say so rather than estimate it.",
+            ],
+          },
+          {
+            heading: "Third-party links",
+            body: [
+              "This site links to client products and third-party tools. We do not control those sites and are not responsible for their content, availability or practices.",
+            ],
+          },
+          {
+            heading: "Limitation of liability",
+            body: [
+              `To the fullest extent permitted by law, ${COMPANY.name}, its officers, directors and employees are not liable for any indirect, consequential or special loss arising from your use of this website. Liability arising from client work is governed by the limits set out in the engagement contract.`,
+            ],
+          },
+          {
+            heading: "Governing law",
+            body: [
+              `These terms are governed by the laws of Pakistan, where ${COMPANY.name} is established. Engagement contracts may specify a different governing law by agreement.`,
+            ],
+          },
+          {
+            heading: "Changes",
+            body: [
+              "We may revise these terms. The date at the top of this page reflects the current version. Continued use of the site after a change means you accept the revised terms.",
+            ],
+          },
+          {
+            heading: "Contact",
+            body: [`Questions about these terms can be sent to ${CONTACT.email}.`],
+          },
+        ]}
+      />
+    </>
   )
 }

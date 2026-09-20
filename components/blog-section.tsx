@@ -1,76 +1,118 @@
 "use client"
 
-import { blogPosts } from "@/data/blog"
-import Image from "next/image"
 import Link from "next/link"
+import { postArt } from "@/components/illustrations/hero-art"
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/section-heading"
+import { blogPosts } from "@/data/blog"
+import { Icon } from "@/components/icons"
 
-export function BlogSection() {
+interface BlogSectionProps {
+  showHeading?: boolean
+  limit?: number
+  showCta?: boolean
+}
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })
+}
+
+export function BlogSection({ showHeading = true, limit, showCta = false }: BlogSectionProps) {
+  const published = blogPosts
+    .filter((post) => post.published)
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+
+  const visible = limit ? published.slice(0, limit) : published
+
   return (
-    <section className="pt-[120px] pb-[120px]">
+    <section className="pt-[120px] pb-[120px] bg-[#F5F9FF] dark:bg-[#0B2451]">
       <div className="container mx-auto px-4">
-        <div className="process_heading w-full text-center mb-8 lg:mb-15">
-          <span className="text-lg font-semibold text-orange-400 mb-2 block">
-            Our Blog
-          </span>
-          <h2 className="text-4xl font-semibold text-gray-900 dark:text-white mb-3 lg:mb-6">
-            Latest News & Articles
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Stay updated with the latest trends and insights in technology and
-            business solutions.
-          </p>
-        </div>
+        {showHeading && (
+          <SectionHeading
+            eyebrow="Insights"
+            title="Engineering notes, not marketing posts."
+            description="What we've learned building AI-native products — written for the people who have to make the architectural decisions."
+            className="mb-12 lg:mb-16"
+          />
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 lg:mt-15">
-          {blogPosts.map((post) => (
-            <div
-              key={post.id}
-              className="group bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all"
-            >
-              <div className="relative overflow-hidden">
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  width={400}
-                  height={250}
-                  className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-                <div className="absolute top-4 left-4 bg-orange-500 text-white px-3 py-1 rounded text-sm font-semibold">
-                  {post.category}
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                  <span className="flex items-center gap-1">
-                    <i className="ph ph-calendar"></i>
-                    {new Date(post.date).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <i className="ph ph-user"></i>
-                    {post.author}
-                  </span>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-500 transition-colors">
-                  {post.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
-                  {post.excerpt}
-                </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {visible.map((post, index) => (
+            <Reveal key={post.slug} delay={index * 0.08} className="h-full">
+              <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#CEE3FF] dark:border-[#0E2C63] bg-white dark:bg-[#09111F] transition-all duration-300 hover:border-[#0059E8] hover:shadow-xl">
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium transition-colors"
+                  className="relative flex h-48 items-center justify-center overflow-hidden bg-[#0A2E6B] dark:bg-[#09111F]"
                 >
-                  Read More
-                  <i className="ph ph-arrow-right"></i>
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:32px_32px]"
+                  />
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0"
+                    style={{
+                      background: `radial-gradient(ellipse 60% 60% at 50% 55%, ${post.accent}26, transparent 70%)`,
+                    }}
+                  />
+                  <span className="relative transition-transform duration-500 group-hover:scale-105">
+                    {(() => {
+                      const { Art } = postArt(post.slug)
+                      return <Art color={post.accent} size={214} />
+                    })()}
+                  </span>
+                  <span className="absolute left-4 top-4 rounded bg-[#FF9958] px-3 py-1 text-sm font-semibold text-white">
+                    {post.category}
+                  </span>
                 </Link>
-              </div>
-            </div>
+
+                <div className="flex flex-1 flex-col p-6">
+                  <div className="mb-3 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                    <span className="flex items-center gap-1.5">
+                      <Icon name="calendar" />
+                      {formatDate(post.publishedAt)}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Icon name="clock" />
+                      {post.readingTime} min read
+                    </span>
+                  </div>
+
+                  <h3 className="fs-six font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2 transition-colors group-hover:text-[#0059E8] dark:group-hover:text-[#FF9958]">
+                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                  </h3>
+                  <p className="mb-5 flex-1 text-base text-gray-600 dark:text-gray-300 line-clamp-3">
+                    {post.excerpt}
+                  </p>
+
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="inline-flex items-center gap-2 font-medium text-[#0059E8] dark:text-[#4d92ff] transition-all hover:gap-3"
+                  >
+                    Read article
+                    <Icon name="arrow-right" />
+                  </Link>
+                </div>
+              </article>
+            </Reveal>
           ))}
         </div>
+
+        {showCta && (
+          <Reveal className="mt-12 text-center">
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 rounded-full bg-[#0059E8] px-8 py-3.5 font-medium text-white transition-all duration-300 hover:gap-3 hover:bg-[#0046BA]"
+            >
+              All articles
+              <Icon name="arrow-right" />
+            </Link>
+          </Reveal>
+        )}
       </div>
     </section>
   )

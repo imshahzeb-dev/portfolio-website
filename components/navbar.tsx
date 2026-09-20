@@ -1,296 +1,303 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import { cn } from "@/lib/utils"
+import { SiteLogo } from "@/components/site-logo"
+import { MORE_NAV, PRIMARY_CTA, PRIMARY_NAV } from "@/data/company"
+import { SERVICE_GROUPS, services } from "@/data/services"
+import { Icon } from "@/components/icons"
+import { IconTile } from "@/components/icon-tile"
 
 export function Navbar() {
-    const pathname = usePathname()
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [isScrolled, setIsScrolled] = useState(false)
-    const [activeSection, setActiveSection] = useState("home")
+  const pathname = usePathname()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
 
-    useEffect(() => {
-        // Check if we're on a different page (not home page)
-        if (pathname !== '/') {
-            // Extract page name from pathname (e.g., /portfolio -> portfolio)
-            const pageName = pathname.replace('/', '')
-            setActiveSection(pageName)
-            return // Don't set up scroll listener for other pages
-        }
+  // Only the home page has a transparent-over-hero navbar; every other page
+  // sits on a banner, so the solid background is correct from the start.
+  const isHome = pathname === "/"
+  const solid = isScrolled || !isHome || isMenuOpen
 
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setIsScrolled(true)
-            } else {
-                setIsScrolled(false)
-            }
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50)
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
-            // Scroll spy: determine which section is currently visible (only on home page)
-            const sections = ["home", "services", "portfolio", "pricing", "team", "testimonials", "blog", "faqs", "contact"]
-            const scrollPosition = window.scrollY + 150 // Offset for better detection
+  // Close the mobile drawer whenever the route changes.
+  useEffect(() => {
+    setIsMenuOpen(false)
+    setMobileServicesOpen(false)
+  }, [pathname])
 
-            for (const sectionId of sections) {
-                const element = document.getElementById(sectionId)
-                if (element) {
-                    const { top, bottom } = element.getBoundingClientRect()
-                    const elementTop = top + window.scrollY
-                    const elementBottom = bottom + window.scrollY
+  const core = services.find((s) => s.group === "core")
 
-                    if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
-                        setActiveSection(sectionId)
-                        break
-                    }
-                }
-            }
-        }
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/")
 
-        handleScroll() // Call once on mount
-        window.addEventListener("scroll", handleScroll)
-        return () => window.removeEventListener("scroll", handleScroll)
-    }, [pathname])
+  return (
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        solid ? "bg-[#0A2E6B] shadow-lg" : "bg-transparent"
+      )}
+    >
+      <div className="container mx-auto px-4 py-4 lg:py-5 flex justify-between items-center">
+        <Link href="/" aria-label="TechnoSX — home" className="text-white">
+          <SiteLogo size={34} />
+        </Link>
 
-    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-        e.preventDefault()
-
-        // If we're not on the home page, navigate to home page first
-        if (pathname !== '/') {
-            window.location.href = '/' + targetId
-            return
-        }
-
-        // If we're on home page, scroll to the section
-        const element = document.querySelector(targetId)
-        if (element) {
-            const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - 80
-            window.scrollTo({
-                top: offsetTop,
-                behavior: 'auto' // Changed from 'smooth' to 'auto' for instant scroll
-            })
-        }
-        setIsMenuOpen(false)
-    }
-
-    const menuItems = [
-        { name: "Portfolio", href: "#portfolio", id: "portfolio" },
-        { name: "Pricing", href: "#pricing", id: "pricing" },
-        { name: "FAQs", href: "#faqs", id: "faqs" },
-        { name: "Contact", href: "#contact", id: "contact" },
-    ]
-
-    // Check if any menu item is currently active
-    const isMenuItemActive = menuItems.some(item => activeSection === item.id)
-
-    return (
-        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-            isScrolled
-                ? "bg-[#0A2E6B] shadow-lg"
-                : "bg-transparent"
-        }`}>
-            <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-            <div className="flex items-center">
-                <Link href="/">
-                    <Image
-                        src="/assets/images/logo.png"
-                        alt="TechnoX IT Logo"
-                        width={200}
-                        height={50}
-                        className="h-10 w-auto"
-                    />
-                </Link>
-            </div>
-            <nav className="hidden lg:flex items-center space-x-8">
-                <a
-                    href="#home"
-                    onClick={(e) => scrollToSection(e, '#home')}
-                    className={`transition-all duration-300 cursor-pointer ${
-                        activeSection === 'home'
-                            ? 'text-orange-400 font-semibold'
-                            : 'text-white hover:text-orange-400'
-                    }`}
-                >
-                    Home
-                </a>
-                <a
-                    href="#services"
-                    onClick={(e) => scrollToSection(e, '#services')}
-                    className={`transition-all duration-300 cursor-pointer ${
-                        activeSection === 'services'
-                            ? 'text-orange-400 font-semibold'
-                            : 'text-white hover:text-orange-400'
-                    }`}
-                >
-                    Services
-                </a>
-                <a
-                    href="#testimonials"
-                    onClick={(e) => scrollToSection(e, '#testimonials')}
-                    className={`transition-all duration-300 cursor-pointer ${
-                        activeSection === 'testimonials'
-                            ? 'text-orange-400 font-semibold'
-                            : 'text-white hover:text-orange-400'
-                    }`}
-                >
-                    Testimonials
-                </a>
-                <a
-                    href="#team"
-                    onClick={(e) => scrollToSection(e, '#team')}
-                    className={`transition-all duration-300 cursor-pointer ${
-                        activeSection === 'team'
-                            ? 'text-orange-400 font-semibold'
-                            : 'text-white hover:text-orange-400'
-                    }`}
-                >
-                    Team
-                </a>
-                <div className="relative group">
-                    <button className={`hover:text-orange-400 group-hover:text-orange-400 transition-all duration-300 flex items-center gap-1 ${
-                        isMenuItemActive
-                            ? 'text-orange-400 font-semibold'
-                            : 'text-white'
-                    }`}>
-                        Menu
-                        <i className="ph-bold ph-caret-down"></i>
-                    </button>
-                    <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                        <div className="py-2">
-                            {menuItems.map((item) => (
-                                <a
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={(e) => scrollToSection(e, item.href)}
-                                    className={`block px-4 py-2 transition-colors cursor-pointer ${
-                                        activeSection === item.id
-                                            ? 'bg-orange-50 dark:bg-gray-700 text-orange-500 dark:text-orange-400 font-semibold'
-                                            : 'text-gray-700 dark:text-gray-200 hover:bg-orange-50 dark:hover:bg-gray-700 hover:text-orange-500 dark:hover:text-orange-400'
-                                    }`}
-                                >
-                                    {item.name}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                <a
-                    href="#blog"
-                    onClick={(e) => scrollToSection(e, '#blog')}
-                    className={`transition-all duration-300 cursor-pointer ${
-                        activeSection === 'blog'
-                            ? 'text-orange-400 font-semibold'
-                            : 'text-white hover:text-orange-400'
-                    }`}
-                >
-                    Blog
-                </a>
-            </nav>
-            <div className="flex items-center gap-4">
-                <Link href="/contact" className="hidden xl:block">
-                    <button className="bg-[#0059E8] hover:bg-[#0046BA] text-white px-6 py-3 rounded-full font-medium transition-all duration-300">
-                        Get Quotes
-                    </button>
-                </Link>
-                <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="w-10 h-10 rounded-full bg-[#0059E8] flex items-center justify-center lg:hidden"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-white"
-                    >
-                        <line x1="4" x2="20" y1="12" y2="12" />
-                        <line x1="4" x2="20" y1="6" y2="6" />
-                        <line x1="4" x2="20" y1="18" y2="18" />
-                    </svg>
-                </button>
-            </div>
-
-            {/* Mobile Menu */}
-            {isMenuOpen && (
-                <div className="absolute top-full left-0 right-0 bg-[#0A2E6B] shadow-lg lg:hidden mt-2 rounded-lg mx-4">
-                    <nav className="flex flex-col p-4 space-y-2">
-                        <a
-                            href="#home"
-                            className={`py-2 cursor-pointer ${
-                                activeSection === 'home'
-                                    ? 'text-orange-400 font-semibold'
-                                    : 'text-white hover:text-orange-400'
-                            }`}
-                            onClick={(e) => scrollToSection(e, '#home')}
-                        >
-                            Home
-                        </a>
-                        <a
-                            href="#services"
-                            className={`py-2 cursor-pointer ${
-                                activeSection === 'services'
-                                    ? 'text-orange-400 font-semibold'
-                                    : 'text-white hover:text-orange-400'
-                            }`}
-                            onClick={(e) => scrollToSection(e, '#services')}
-                        >
-                            Services
-                        </a>
-                        <a
-                            href="#testimonials"
-                            className={`py-2 cursor-pointer ${
-                                activeSection === 'testimonials'
-                                    ? 'text-orange-400 font-semibold'
-                                    : 'text-white hover:text-orange-400'
-                            }`}
-                            onClick={(e) => scrollToSection(e, '#testimonials')}
-                        >
-                            Testimonials
-                        </a>
-                        <a
-                            href="#team"
-                            className={`py-2 cursor-pointer ${
-                                activeSection === 'team'
-                                    ? 'text-orange-400 font-semibold'
-                                    : 'text-white hover:text-orange-400'
-                            }`}
-                            onClick={(e) => scrollToSection(e, '#team')}
-                        >
-                            Team
-                        </a>
-                        <a
-                            href="#blog"
-                            className={`py-2 cursor-pointer ${
-                                activeSection === 'blog'
-                                    ? 'text-orange-400 font-semibold'
-                                    : 'text-white hover:text-orange-400'
-                            }`}
-                            onClick={(e) => scrollToSection(e, '#blog')}
-                        >
-                            Blog
-                        </a>
-                        {menuItems.map((item) => (
-                            <a
-                                key={item.href}
-                                href={item.href}
-                                className={`py-2 cursor-pointer ${
-                                    activeSection === item.id
-                                        ? 'text-orange-400 font-semibold'
-                                        : 'text-white hover:text-orange-400'
-                                }`}
-                                onClick={(e) => scrollToSection(e, item.href)}
-                            >
-                                {item.name}
-                            </a>
-                        ))}
-                    </nav>
-                </div>
+        {/* ── Desktop nav ───────────────────────────────────────────────── */}
+        <nav className="hidden lg:flex items-center gap-7">
+          <Link
+            href="/"
+            className={cn(
+              "transition-colors duration-300",
+              isActive("/") ? "text-[#FF9958] font-semibold" : "text-white hover:text-[#FF9958]"
             )}
+          >
+            Home
+          </Link>
+
+          {/* Services mega-menu */}
+          <div className="group relative">
+            <Link
+              href="/services"
+              aria-haspopup="true"
+              className={cn(
+                "flex items-center gap-1 transition-colors duration-300",
+                isActive("/services")
+                  ? "text-[#FF9958] font-semibold"
+                  : "text-white hover:text-[#FF9958]"
+              )}
+            >
+              Services
+              <Icon
+                name="caret-down"
+                size={14}
+                className="transition-transform duration-300 group-hover:rotate-180 group-focus-within:rotate-180"
+              />
+            </Link>
+
+            {/* Opens on hover and on keyboard focus — hover alone left the whole
+                menu unreachable by keyboard. */}
+            {/* Anchored to the viewport, not the trigger: centring on the
+                trigger pushed the panel off-screen at ~1024px, where the nav
+                sits further left. The pt-4 band keeps the hover bridge. */}
+            <div
+              className={cn(
+                "fixed left-1/2 top-[62px] -translate-x-1/2 pt-4",
+                "invisible translate-y-1 opacity-0 transition-all duration-300",
+                "group-hover:visible group-hover:translate-y-0 group-hover:opacity-100",
+                "group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100"
+              )}
+            >
+              <div className="w-[min(880px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#CEE3FF] bg-white shadow-2xl dark:border-[#0E2C63] dark:bg-[#0B2451]">
+                <div className="grid grid-cols-12">
+                  {/* Featured: the core service, merchandised rather than left
+                      as a one-item column with dead space beside it. */}
+                  <div className="col-span-4 border-r border-[#CEE3FF] bg-[#F5F9FF] p-6 dark:border-[#0E2C63] dark:bg-[#0E2C63]/40">
+                    <span className="mb-4 block text-xs font-semibold uppercase tracking-[0.14em] text-[#FF9958]">
+                      {SERVICE_GROUPS[0]?.label}
+                    </span>
+                    {core && (
+                      <Link href={`/services/${core.slug}`} className="group/f block">
+                        <IconTile name={core.icon} tone="accent" interactive={false} className="mb-4" />
+                        <span className="mb-1.5 block fs-six font-semibold text-gray-900 transition-colors group-hover/f:text-[#0059E8] dark:text-white dark:group-hover/f:text-[#FF9958]">
+                          {core.title}
+                        </span>
+                        <span className="mb-4 block text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                          {core.description}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-[#0059E8] transition-all group-hover/f:gap-2.5 dark:text-[#6BA5FF]">
+                          Explore
+                          <Icon name="arrow-right" size={14} />
+                        </span>
+                      </Link>
+                    )}
+                  </div>
+
+                  {/* The three remaining groups, one column each */}
+                  <div className="col-span-8 grid grid-cols-3 gap-x-4 p-6">
+                    {SERVICE_GROUPS.slice(1).map((group) => (
+                      <div key={group.key}>
+                        <span className="mb-3 block text-xs font-semibold uppercase tracking-[0.14em] text-[#FF9958]">
+                          {group.label}
+                        </span>
+                        <ul className="space-y-0.5">
+                          {services
+                            .filter((s) => s.group === group.key)
+                            .map((service) => (
+                              <li key={service.slug}>
+                                <Link
+                                  href={`/services/${service.slug}`}
+                                  className="group/item flex items-center gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-[#F5F9FF] dark:hover:bg-[#0E2C63]"
+                                >
+                                  <Icon
+                                    name={service.icon}
+                                    size={18}
+                                    className="shrink-0 text-[#0059E8] dark:text-[#6BA5FF]"
+                                  />
+                                  <span className="text-sm font-medium text-gray-900 transition-colors group-hover/item:text-[#0059E8] dark:text-white dark:group-hover/item:text-[#FF9958]">
+                                    {service.shortTitle}
+                                  </span>
+                                </Link>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-[#CEE3FF] bg-[#F5F9FF]/60 px-6 py-3.5 dark:border-[#0E2C63] dark:bg-[#09111F]/40">
+                  <Link
+                    href="/services"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-[#0059E8] transition-all hover:gap-3 dark:text-[#FF9958]"
+                  >
+                    All {services.length} services
+                    <Icon name="arrow-right" size={15} />
+                  </Link>
+                  <Link
+                    href="/how-we-work"
+                    className="text-sm text-gray-600 transition-colors hover:text-[#0059E8] dark:text-gray-300 dark:hover:text-[#FF9958]"
+                  >
+                    How we work
+                  </Link>
+                </div>
+              </div>
             </div>
-        </header>
-    )
-} 
+          </div>
+
+          {PRIMARY_NAV.filter((l) => l.href !== "/services").map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "transition-colors duration-300",
+                isActive(link.href)
+                  ? "text-[#FF9958] font-semibold"
+                  : "text-white hover:text-[#FF9958]"
+              )}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {/* More dropdown */}
+          <div className="relative group">
+            <button
+              className={cn(
+                "flex items-center gap-1 transition-colors duration-300",
+                MORE_NAV.some((l) => isActive(l.href))
+                  ? "text-[#FF9958] font-semibold"
+                  : "text-white hover:text-[#FF9958]"
+              )}
+            >
+              More
+              <Icon name="caret-down" className="text-sm" />
+            </button>
+            <div className="absolute right-0 top-full pt-4 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300">
+              <div className="w-52 rounded-xl border border-[#CEE3FF] dark:border-[#0E2C63] bg-white dark:bg-[#0B2451] shadow-2xl py-2">
+                {MORE_NAV.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={cn(
+                      "block px-4 py-2 transition-colors",
+                      isActive(link.href)
+                        ? "text-[#0059E8] dark:text-[#FF9958] font-semibold bg-[#F5F9FF] dark:bg-[#0E2C63]"
+                        : "text-gray-700 dark:text-gray-200 hover:bg-[#F5F9FF] dark:hover:bg-[#0E2C63]"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <Link
+            href={PRIMARY_CTA.href}
+            className="hidden md:inline-block bg-[#0059E8] hover:bg-[#0046BA] text-white px-6 py-3 rounded-full font-medium transition-all duration-300"
+          >
+            {PRIMARY_CTA.label}
+          </Link>
+          <button
+            onClick={() => setIsMenuOpen((open) => !open)}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
+            className="w-11 h-11 rounded-full bg-[#0059E8] hover:bg-[#0046BA] flex items-center justify-center lg:hidden transition-colors"
+          >
+            <Icon name={isMenuOpen ? "x" : "list"} size={22} className="text-white" />
+          </button>
+        </div>
+      </div>
+
+      {/* ── Mobile drawer ───────────────────────────────────────────────── */}
+      {isMenuOpen && (
+        <div className="lg:hidden bg-[#0A2E6B] border-t border-white/10 max-h-[calc(100vh-72px)] overflow-y-auto">
+          <nav className="container mx-auto px-4 py-4 flex flex-col">
+            <Link href="/" className="py-3 text-white border-b border-white/10">
+              Home
+            </Link>
+
+            <button
+              onClick={() => setMobileServicesOpen((open) => !open)}
+              className="py-3 text-white border-b border-white/10 flex items-center justify-between"
+              aria-expanded={mobileServicesOpen}
+            >
+              Services
+              <Icon name="caret-down" className={cn(
+                  "transition-transform",
+                  mobileServicesOpen && "rotate-180")} />
+            </button>
+            {mobileServicesOpen && (
+              <div className="pl-3 py-2 border-b border-white/10">
+                <Link href="/services" className="block py-2 text-[#FF9958] font-medium">
+                  All services
+                </Link>
+                {services.map((service) => (
+                  <Link
+                    key={service.slug}
+                    href={`/services/${service.slug}`}
+                    className="flex items-center gap-2 py-2 text-white/80 hover:text-white"
+                  >
+                    <Icon name={service.icon} size={18} className="text-[#4d92ff]" />
+                    {service.shortTitle}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {[...PRIMARY_NAV.filter((l) => l.href !== "/services"), ...MORE_NAV].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "py-3 border-b border-white/10",
+                  isActive(link.href) ? "text-[#FF9958] font-semibold" : "text-white"
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            <Link
+              href={PRIMARY_CTA.href}
+              className="mt-5 mb-2 bg-[#0059E8] hover:bg-[#0046BA] text-white text-center px-6 py-3 rounded-full font-medium transition-colors"
+            >
+              {PRIMARY_CTA.label}
+            </Link>
+          </nav>
+        </div>
+      )}
+    </header>
+  )
+}

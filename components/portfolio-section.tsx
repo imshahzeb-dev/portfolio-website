@@ -1,89 +1,135 @@
 "use client"
 
-import { portfolioItems } from "@/data/portfolio"
-import Image from "next/image"
 import { useState } from "react"
+import Link from "next/link"
+import { caseArt } from "@/components/illustrations/hero-art"
+import { cn } from "@/lib/utils"
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/section-heading"
+import { Icon } from "@/components/icons"
+import {
+  portfolioCategories,
+  portfolioItems,
+  type PortfolioCategory,
+} from "@/data/portfolio"
 
-type CategoryType = "All" | "Branding" | "Design" | "Development" | "Solution"
+interface PortfolioSectionProps {
+  showHeading?: boolean
+  showFilters?: boolean
+  /** Cap the number of cards — used for the homepage teaser. */
+  limit?: number
+  showCta?: boolean
+}
 
-export function PortfolioSection() {
-  const [activeCategory, setActiveCategory] =
-    useState<CategoryType>("All")
+export function PortfolioSection({
+  showHeading = true,
+  showFilters = true,
+  limit,
+  showCta = false,
+}: PortfolioSectionProps) {
+  const [activeCategory, setActiveCategory] = useState<PortfolioCategory>("All")
 
-  const categories: CategoryType[] = [
-    "All",
-    "Branding",
-    "Design",
-    "Development",
-    "Solution",
-  ]
-
-  const filteredItems =
+  const filtered =
     activeCategory === "All"
       ? portfolioItems
       : portfolioItems.filter((item) => item.category === activeCategory)
 
+  const visible = limit ? filtered.slice(0, limit) : filtered
+
   return (
-    <section className="pt-[120px] pb-[120px]">
+    <section className="pt-[120px] pb-[120px] bg-[rgb(var(--b1))]">
       <div className="container mx-auto px-4">
-        <div className="process_heading w-full text-center mb-8 lg:mb-15">
-          <span className="text-lg font-semibold text-orange-400 mb-2 block">
-            Our Portfolio
-          </span>
-          <h2 className="text-4xl font-semibold text-gray-900 dark:text-white mb-3 lg:mb-6">
-            Our Recent Projects
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Build responsive, mobile-first projects on the web with the world's
-            most popular front-end component library.
-          </p>
-        </div>
+        {showHeading && (
+          <SectionHeading
+            eyebrow="Our work"
+            title="Products we've taken from concept to scale."
+            description="Real client platforms across PropTech, HealthTech, FinTech, energy, music and AI. Outcome metrics are published only once the client shares them."
+            className="mb-10 lg:mb-14"
+          />
+        )}
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8 lg:mb-15">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-6 py-3 rounded-full text-lg font-medium transition-all ${
-                activeCategory === category
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-700"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        {/* Portfolio Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              className="group relative overflow-hidden rounded-lg cursor-pointer"
-            >
-              <Image
-                src={item.image}
-                alt={item.title}
-                width={400}
-                height={300}
-                className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                <span className="text-orange-400 text-sm font-semibold mb-1">
-                  {item.category}
-                </span>
-                <h3 className="text-white text-xl font-semibold mb-2">
-                  {item.title}
-                </h3>
-                {item.description && (
-                  <p className="text-gray-200 text-sm">{item.description}</p>
+        {showFilters && (
+          <div className="flex flex-wrap justify-center gap-3 mb-10 lg:mb-14">
+            {portfolioCategories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                aria-pressed={activeCategory === category}
+                className={cn(
+                  "px-6 py-2.5 rounded-full text-base font-medium transition-all",
+                  activeCategory === category
+                    ? "bg-[#0059E8] text-white"
+                    : "bg-[#F5F9FF] dark:bg-[#0B2451] text-gray-700 dark:text-gray-300 hover:bg-[#CEE3FF] dark:hover:bg-[#0E2C63]"
                 )}
-              </div>
-            </div>
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {visible.map((item, index) => (
+            <Reveal key={item.id} delay={Math.min(index, 5) * 0.07} className="h-full">
+              <Link
+                href={`/portfolio/${item.slug}`}
+                className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#CEE3FF] dark:border-[#0E2C63] bg-white dark:bg-[#0B2451] transition-all duration-300 hover:border-[#0059E8] hover:shadow-xl"
+              >
+                <div className="relative flex h-56 items-center justify-center overflow-hidden bg-[#0A2E6B] dark:bg-[#09111F]">
+                  {/* Decorative field behind the isometric scene */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:32px_32px]"
+                  />
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 transition-opacity duration-500 group-hover:opacity-100 opacity-70"
+                    style={{
+                      background: `radial-gradient(ellipse 60% 60% at 50% 55%, ${item.accent}26, transparent 70%)`,
+                    }}
+                  />
+                  <span className="relative transition-transform duration-500 group-hover:scale-105">
+                    {(() => {
+                      const { Art } = caseArt(item.slug)
+                      return <Art color={item.accent} size={228} />
+                    })()}
+                  </span>
+                  <span className="absolute left-4 top-4 rounded-full bg-black/30 px-3 py-1 text-sm font-medium text-white backdrop-blur-sm">
+                    {item.industry}
+                  </span>
+                </div>
+
+                <div className="flex flex-1 flex-col p-6">
+                  <span className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-[#FF9958]">
+                    {item.category}
+                  </span>
+                  <h3 className="fs-six font-semibold text-gray-900 dark:text-white mb-2 transition-colors group-hover:text-[#0059E8] dark:group-hover:text-[#FF9958]">
+                    {item.client}
+                  </h3>
+                  <p className="text-base text-gray-600 dark:text-gray-300 mb-5 flex-1">
+                    {item.tagline}
+                  </p>
+                  <span className="inline-flex items-center gap-2 font-medium text-[#0059E8] dark:text-[#4d92ff] transition-all group-hover:gap-3">
+                    Read case study
+                    <Icon name="arrow-right" />
+                  </span>
+                </div>
+              </Link>
+            </Reveal>
           ))}
         </div>
+
+        {showCta && (
+          <Reveal className="mt-12 text-center">
+            <Link
+              href="/portfolio"
+              className="inline-flex items-center gap-2 rounded-full bg-[#0059E8] px-8 py-3.5 font-medium text-white transition-all duration-300 hover:gap-3 hover:bg-[#0046BA]"
+            >
+              All case studies
+              <Icon name="arrow-right" />
+            </Link>
+          </Reveal>
+        )}
       </div>
     </section>
   )

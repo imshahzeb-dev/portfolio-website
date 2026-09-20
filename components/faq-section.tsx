@@ -1,123 +1,121 @@
 "use client"
 
-import { faqs } from "@/data/faqs"
 import { useState } from "react"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/section-heading"
+import { faqs as defaultFaqs } from "@/data/faqs"
+import { Icon } from "@/components/icons"
 
-export function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+interface FaqItem {
+  question: string
+  answer: string
+}
 
-  const toggleFaq = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index)
-  }
+interface FAQSectionProps {
+  /** Defaults to the general FAQ list; service pages pass their own. */
+  items?: FaqItem[]
+  eyebrow?: string
+  title?: string
+  description?: string
+  showHeading?: boolean
+  limit?: number
+  showCta?: boolean
+}
 
-  const leftColumnFaqs = faqs.filter((_, index) => index % 2 === 0)
-  const rightColumnFaqs = faqs.filter((_, index) => index % 2 !== 0)
+export function FAQSection({
+  items,
+  eyebrow = "FAQs",
+  title = "Questions we get asked most.",
+  description = "If yours isn't here, ask it directly — we answer technical questions before there's a contract.",
+  showHeading = true,
+  limit,
+  showCta = false,
+}: FAQSectionProps) {
+  const source: FaqItem[] = items ?? defaultFaqs
+  const visible = limit ? source.slice(0, limit) : source
+  const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section className="pt-[120px] pb-[120px]">
+    <section className="pt-[120px] pb-[120px] bg-[rgb(var(--b1))]">
       <div className="container mx-auto px-4">
-        <div className="process_heading w-full text-center mb-8 md:mb-15">
-          <span className="text-lg font-semibold text-orange-400 mb-2 block">
-            FAQ's
-          </span>
-          <h2 className="text-4xl font-semibold text-gray-900 dark:text-white mb-3 lg:mb-6">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Build responsive, mobile-first projects on the web with the world's
-            most popular front-end component library.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-6 mt-5 md:mt-10">
-          <div className="space-y-2 md:space-y-4">
-            {leftColumnFaqs.map((faq, index) => {
-              const actualIndex = index * 2
-              const isOpen = openIndex === actualIndex
-              return (
+        {showHeading && (
+          <SectionHeading
+            eyebrow={eyebrow}
+            title={title}
+            description={description}
+            className="mb-12 lg:mb-16"
+          />
+        )}
+
+        <div className="mx-auto max-w-4xl space-y-4">
+          {visible.map((faq, index) => {
+            const isOpen = openIndex === index
+            return (
+              <Reveal key={faq.question} delay={Math.min(index, 6) * 0.04}>
                 <div
-                  key={faq.id}
-                  className="p-4 md:p-8 border border-gray-200 dark:border-gray-700 rounded-lg"
-                  onMouseLeave={() => setOpenIndex(null)}
+                  className={cn(
+                    "rounded-xl border transition-all duration-300",
+                    isOpen
+                      ? "border-[#0059E8] bg-white dark:bg-[#0B2451] shadow-lg"
+                      : "border-[#CEE3FF] dark:border-[#0E2C63] bg-white dark:bg-[#0B2451]"
+                  )}
                 >
-                  <div className="question flex gap-3 justify-between items-center">
-                    <div className="flex gap-2 items-center flex-1">
-                      <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#0059E8] rounded">
-                        <i className="ph ph-arrow-right text-white"></i>
-                      </div>
-                      <h3 className="text-[#0059E8] text-lg font-bold">
-                        {faq.question}
-                      </h3>
-                    </div>
-                    <div
-                      className="relative cursor-pointer"
-                      onMouseEnter={() => setOpenIndex(actualIndex)}
-                      onClick={() => toggleFaq(actualIndex)}
-                    >
-                      <i
-                        className={`ph ph-minus text-[#0059E8] text-2xl transition-transform ${
-                          isOpen ? "rotate-0" : "rotate-90"
-                        }`}
-                      ></i>
-                    </div>
-                  </div>
-                  <div
-                    className={`answer overflow-hidden transition-all duration-300 ${
-                      isOpen ? "max-h-96 mt-4" : "max-h-0"
-                    }`}
+                  <button
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    className="flex w-full items-center justify-between gap-4 p-5 text-left md:p-7"
                   >
-                    <p className="text-gray-600 dark:text-gray-400 text-base font-medium leading-[150%]">
-                      {faq.answer}
-                    </p>
+                    <span className="flex items-center gap-4">
+                      <span
+                        className={cn(
+                          "flex h-9 w-9 flex-shrink-0 items-center justify-center rounded transition-colors",
+                          isOpen ? "bg-[#0059E8]" : "bg-[#F5F9FF] dark:bg-[#0E2C63]"
+                        )}
+                      >
+                        <Icon name="question" className={cn(
+                            "text-lg",
+                            isOpen ? "text-white": "text-[#0059E8]")} />
+                      </span>
+                      <span className="fs-six font-semibold text-gray-900 dark:text-white">
+                        {faq.question}
+                      </span>
+                    </span>
+                    <Icon name="caret-down" className={cn(
+                        "flex-shrink-0 text-xl text-[#0059E8] transition-transform duration-300",
+                        isOpen && "rotate-180")} />
+                  </button>
+
+                  <div
+                    className={cn(
+                      "grid overflow-hidden transition-all duration-300",
+                      isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                    )}
+                  >
+                    <div className="overflow-hidden">
+                      <p className="px-5 pb-6 pl-[4.25rem] text-base leading-[165%] text-gray-600 dark:text-gray-300 md:px-7 md:pl-[5.25rem]">
+                        {faq.answer}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-          <div className="space-y-2 md:space-y-4">
-            {rightColumnFaqs.map((faq, index) => {
-              const actualIndex = index * 2 + 1
-              const isOpen = openIndex === actualIndex
-              return (
-                <div
-                  key={faq.id}
-                  className="p-4 md:p-8 border border-gray-200 dark:border-gray-700 rounded-lg"
-                  onMouseLeave={() => setOpenIndex(null)}
-                >
-                  <div className="question flex gap-3 justify-between items-center">
-                    <div className="flex gap-2 items-center flex-1">
-                      <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#0059E8] rounded">
-                        <i className="ph ph-arrow-right text-white"></i>
-                      </div>
-                      <h3 className="text-[#0059E8] text-lg font-bold">
-                        {faq.question}
-                      </h3>
-                    </div>
-                    <div
-                      className="relative cursor-pointer"
-                      onMouseEnter={() => setOpenIndex(actualIndex)}
-                      onClick={() => toggleFaq(actualIndex)}
-                    >
-                      <i
-                        className={`ph ph-minus text-[#0059E8] text-2xl transition-transform ${
-                          isOpen ? "rotate-0" : "rotate-90"
-                        }`}
-                      ></i>
-                    </div>
-                  </div>
-                  <div
-                    className={`answer overflow-hidden transition-all duration-300 ${
-                      isOpen ? "max-h-96 mt-4" : "max-h-0"
-                    }`}
-                  >
-                    <p className="text-gray-600 dark:text-gray-400 text-base font-medium leading-[150%]">
-                      {faq.answer}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+              </Reveal>
+            )
+          })}
         </div>
+
+        {showCta && (
+          <Reveal className="mt-12 text-center">
+            <Link
+              href="/faqs"
+              className="inline-flex items-center gap-2 rounded-full bg-[#0059E8] px-8 py-3.5 font-medium text-white transition-all duration-300 hover:gap-3 hover:bg-[#0046BA]"
+            >
+              All FAQs
+              <Icon name="arrow-right" />
+            </Link>
+          </Reveal>
+        )}
       </div>
     </section>
   )

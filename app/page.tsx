@@ -1,49 +1,61 @@
-import { ParticlesComponent } from "@/components/particles-component"
-import { Navbar } from "@/components/navbar"
 import { HeroSection } from "@/components/hero-section"
 import { ServicesSection } from "@/components/services-section"
+import { AiThesisSection } from "@/components/ai-thesis-section"
+import { MethodSection } from "@/components/method-section"
+import { TechEcosystem } from "@/components/tech-ecosystem"
+import { EngagementSection } from "@/components/engagement-section"
 import { PortfolioSection } from "@/components/portfolio-section"
-import { PricingSection } from "@/components/pricing-section"
 import { TeamSection } from "@/components/team-section"
-import { TestimonialsSection } from "@/components/testimonials-section"
 import { BlogSection } from "@/components/blog-section"
 import { FAQSection } from "@/components/faq-section"
-import { ContactForm } from "@/components/contact-form"
-import { Footer } from "@/components/footer"
+import { CtaBand } from "@/components/cta-band"
 
 export default function Home() {
   return (
     <>
-      <Navbar />
-      <div id="home" className="min-h-screen mx-auto text-white overflow-hidden relative">
+      <section id="home" className="relative overflow-hidden">
         <HeroSection />
-        <ParticlesComponent />
-      </div>
-      <div id="services">
+      </section>
+
+      <section id="services" className="cv-section">
         <ServicesSection />
+      </section>
+
+      <section id="ai" className="cv-section">
+        <AiThesisSection />
+      </section>
+
+      <div className="cv-section">
+        <TechEcosystem />
       </div>
-      <div id="portfolio">
-        <PortfolioSection />
-      </div>
-      <div id="pricing">
-        <PricingSection />
-      </div>
-      <div id="team">
+
+      <section id="method" className="cv-section">
+        <MethodSection />
+      </section>
+
+      <section id="how-we-work" className="cv-section">
+        <EngagementSection />
+      </section>
+
+      <section id="work" className="cv-section">
+        <PortfolioSection limit={3} showFilters={false} showCta />
+      </section>
+
+      <section id="team" className="cv-section">
         <TeamSection />
+      </section>
+
+      <section id="blog" className="cv-section">
+        <BlogSection limit={3} showCta />
+      </section>
+
+      <section id="faqs" className="cv-section">
+        <FAQSection limit={6} showCta />
+      </section>
+
+      <div className="cv-section">
+        <CtaBand />
       </div>
-      <div id="testimonials">
-        <TestimonialsSection />
-      </div>
-      <div id="blog">
-        <BlogSection />
-      </div>
-      <div id="faqs">
-        <FAQSection />
-      </div>
-      <div id="contact">
-        <ContactForm />
-      </div>
-      <Footer />
     </>
   )
 }

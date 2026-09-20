@@ -1,43 +1,122 @@
 "use client"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import Link from "next/link"
-import { services } from "@/data/services"
 
-export function ServicesSection() {
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/section-heading"
+import { SERVICE_GROUPS, services, type Service } from "@/data/services"
+import { Icon } from "@/components/icons"
+import { IconTile } from "@/components/icon-tile"
+
+interface ServicesSectionProps {
+  /** Group the cards under Core / Build / Run & Scale / Assure headings. */
+  grouped?: boolean
+  showHeading?: boolean
+  showCta?: boolean
+}
+
+function ServiceCard({ service, index }: { service: Service; index: number }) {
   return (
-    <section className="py-[120px] px-[12px] bg-[#111827]">
-      <div className="max-w-4xl mx-auto text-center mb-12">
-        <span className="text-[rgb(var(--p3))] font-semibold text-lg block mb-2">Our Services</span>
-        <h2 className="fs-two font-bold text-white text-4xl mb-4">Services We Offer</h2>
-        <p className="text-white/80 text-lg mb-6">
-          Technox is a HTML5 template based on Sass and Bootstrap 5 with modern and creative multipurpose design you can use Best services & IT solutions.
-        </p>
-        <Link href="/services" className="inline-block bg-[#2563eb] text-white px-8 py-3 rounded-full font-medium text-lg transition-all duration-300">
-          See Services
-        </Link>
-      </div>
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-        {services.map((service, idx) => (
-          <motion.div
-            key={service.id}
-            className="flex flex-col items-center text-center rounded-xl cursor-pointer transition-all duration-300 group focus:bg-[#0b2451] hover:bg-[#0b2451] p-8"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: idx * 0.1 }}
-            viewport={{ once: true }}
-          >
-            <Image
-              src={service.icon}
-              alt={service.title}
-              width={80}
-              height={80}
-              className="mx-auto mb-6"
-            />
-            <h4 className="font-semibold text-white text-2xl mb-4">{service.title}</h4>
-            <p className="text-white/80 text-base">{service.description}</p>
-          </motion.div>
-        ))}
+    <Reveal delay={Math.min(index, 5) * 0.06} className="h-full">
+      <Link
+        href={`/services/${service.slug}`}
+        className={cn(
+          "group flex h-full flex-col rounded-xl border p-7 transition-all duration-300",
+          "border-white/10 bg-white/[0.03] hover:border-[#0059E8] hover:bg-[#0b2451]",
+          service.featured && "border-[#FF9958]/40 bg-[#0b2451]/60"
+        )}
+      >
+        <IconTile
+          name={service.icon}
+          tone={service.featured ? "accent" : "onDark"}
+          className="mb-5"
+        />
+
+        {service.featured && (
+          <span className="mb-2 w-fit rounded-full bg-[#FF9958]/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#FF9958]">
+            Our core
+          </span>
+        )}
+
+        <h3 className="fs-six font-semibold text-white mb-3">{service.title}</h3>
+        <p className="text-white/70 text-base mb-6 flex-1">{service.description}</p>
+
+        <span className="inline-flex items-center gap-2 text-[#4d92ff] group-hover:text-[#FF9958] font-medium transition-all group-hover:gap-3">
+          Explore service
+          <Icon name="arrow-right" />
+        </span>
+      </Link>
+    </Reveal>
+  )
+}
+
+export function ServicesSection({
+  grouped = false,
+  showHeading = true,
+  showCta = true,
+}: ServicesSectionProps) {
+  return (
+    <section className="pt-[120px] pb-[120px] bg-[#0A2E6B] dark:bg-[#09111F]">
+      <div className="container mx-auto px-4">
+        {showHeading && (
+          <SectionHeading
+            eyebrow="What we do"
+            title="One partner, the full product lifecycle."
+            description="Ten services across four groups — from the AI layer at our core to the quality and security work that keeps a product live."
+            tone="onDark"
+            className="mb-12 lg:mb-16"
+          />
+        )}
+
+        {grouped ? (
+          <div className="space-y-16">
+            {SERVICE_GROUPS.map((group) => {
+              const groupServices = services.filter((s) => s.group === group.key)
+              return (
+                <div key={group.key}>
+                  <Reveal className="mb-7 flex flex-col gap-2 border-b border-white/10 pb-4 md:flex-row md:items-end md:justify-between">
+                    <h3 className="fs-four font-semibold text-white">
+                      <span className="inherit-type text-[#FF9958]">{group.label}</span>
+                    </h3>
+                    <p className="text-white/60 text-base md:max-w-xl md:text-right">
+                      {group.blurb}
+                    </p>
+                  </Reveal>
+                  <div
+                    className={cn(
+                      "grid gap-6",
+                      groupServices.length === 1
+                        ? "grid-cols-1"
+                        : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+                    )}
+                  >
+                    {groupServices.map((service, index) => (
+                      <ServiceCard key={service.slug} service={service} index={index} />
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {services.map((service, index) => (
+              <ServiceCard key={service.slug} service={service} index={index} />
+            ))}
+          </div>
+        )}
+
+        {showCta && (
+          <Reveal className="mt-12 text-center">
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 rounded-full bg-[#0059E8] px-8 py-3.5 font-medium text-white transition-all duration-300 hover:gap-3 hover:bg-[#0046BA]"
+            >
+              All ten services
+              <Icon name="arrow-right" />
+            </Link>
+          </Reveal>
+        )}
       </div>
     </section>
   )

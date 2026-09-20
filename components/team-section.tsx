@@ -1,55 +1,81 @@
 "use client"
 
-import { teamMembers } from "@/data/team"
-import Image from "next/image"
+import Link from "next/link"
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/section-heading"
+import { TEAM_STATEMENT, teamDisciplines } from "@/data/team"
+import { Icon } from "@/components/icons"
+import { IconTile } from "@/components/icon-tile"
 
-export function TeamSection() {
+interface TeamSectionProps {
+  showHeading?: boolean
+  showCta?: boolean
+}
+
+/**
+ * The team, presented by discipline.
+ *
+ * content.md forbids inventing names, photos or headcount, so this section
+ * describes the practices that staff an engagement rather than fabricating
+ * individual profiles. TODO(founder): swap in real profiles when available.
+ */
+export function TeamSection({ showHeading = true, showCta = true }: TeamSectionProps) {
   return (
-    <section className="pt-[120px] pb-[120px] bg-gray-50 dark:bg-gray-900">
+    <section className="pt-[120px] pb-[120px] bg-[#F5F9FF] dark:bg-[#0B2451]">
       <div className="container mx-auto px-4">
-        <div className="process_heading w-full text-center mb-8 md:mb-15">
-          <span className="text-lg font-semibold text-orange-400 mb-2 block">
-            Our Team
-          </span>
-          <h2 className="text-4xl font-semibold text-gray-900 dark:text-white mb-3 lg:mb-6">
-            Meet the Masterminds
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Build responsive, mobile-first projects on the web with the world's
-            most popular front-end component library.
-          </p>
-        </div>
-        <div className="mt-8 md:mt-15">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-1">
-            {teamMembers.map((member, index) => (
-              <div
-                key={member.id}
-                className="single_team relative z-10 h-full overflow-hidden group"
-              >
-                <div className="relative">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    width={400}
-                    height={480}
-                    className="w-full h-auto object-cover"
-                  />
-                  <div className="team-content absolute bottom-0 left-0 right-0 bg-blue-900/90 p-3 md:p-5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <div className="pb-6 md:pb-12">
-                      <span className="text-orange-400 text-lg font-semibold mb-2 block">
-                        {member.role}
-                      </span>
-                      <h4 className="text-white text-2xl mb-2 md:mb-3">
-                        {member.name}
-                      </h4>
-                      <span className="text-white text-sm">FB - TW - IN</span>
-                    </div>
-                  </div>
+        {showHeading && (
+          <SectionHeading
+            eyebrow="Our team"
+            title="Senior-only, across every discipline."
+            description={TEAM_STATEMENT}
+            className="mb-12 lg:mb-16"
+          />
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+          {teamDisciplines.map((discipline, index) => (
+            <Reveal key={discipline.id} delay={Math.min(index, 7) * 0.06} className="h-full">
+              <div className="group flex h-full flex-col rounded-xl border border-[#CEE3FF] dark:border-[#0E2C63] bg-white dark:bg-[#09111F] p-6 transition-all duration-300 hover:border-[#0059E8] hover:shadow-xl">
+                <div className="mb-5 flex items-center justify-between">
+                  <IconTile name={discipline.icon} />
+                  <span className="rounded-full bg-[#FF9958]/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#FF9958]">
+                    {discipline.focus}
+                  </span>
+                </div>
+
+                <h3 className="fs-six font-semibold text-gray-900 dark:text-white mb-3">
+                  {discipline.name}
+                </h3>
+                <p className="mb-5 flex-1 text-base text-gray-600 dark:text-gray-300">
+                  {discipline.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {discipline.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-full border border-[#CEE3FF] dark:border-[#0E2C63] px-3 py-1 text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      {skill}
+                    </span>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+            </Reveal>
+          ))}
         </div>
+
+        {showCta && (
+          <Reveal className="mt-12 text-center">
+            <Link
+              href="/careers"
+              className="inline-flex items-center gap-2 rounded-full bg-[#0059E8] px-8 py-3.5 font-medium text-white transition-all duration-300 hover:gap-3 hover:bg-[#0046BA]"
+            >
+              Join the team
+              <Icon name="arrow-right" />
+            </Link>
+          </Reveal>
+        )}
       </div>
     </section>
   )
